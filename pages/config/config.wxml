@@ -1,0 +1,19 @@
+<!--pages/config/config.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">配置</view>
+		<view class="page__desc">具体配置</view>
+	</view>
+
+	<view class="page__bd">
+		<button class="weui-btn" bindtap="queryInfo">一键查询</button>
+
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell">
+				<view class="weui-cell__bd">
+					<textarea class="weui-textarea" placeholder="返回值" value="{{result}}" style="height: 3.3em" />
+					</view>
+      </view>
+      </view>
+      </view>
+</view>
