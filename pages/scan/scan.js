@@ -156,9 +156,9 @@ Page({
     wx.onBluetoothDeviceFound((res) => {
       res.devices.forEach(device => {
         console.log('device', device)
-        // if (!device.name && !device.localName) {
-        //   return
-        // }
+        if (!device.name && !device.localName) {
+          return
+        }
         const foundDevices = this.data.devices
         const idx = inArray(foundDevices, 'deviceId', device.deviceId)
         const data = {}
@@ -184,7 +184,6 @@ Page({
           deviceId,
         })
         this.getBLEDeviceServices(deviceId)
-        wx.setStorageSync('CONNECT_DEVICEID', deviceId)
       }
     })
     this.stopBluetoothDevicesDiscovery()
@@ -203,47 +202,64 @@ Page({
     wx.getBLEDeviceServices({
       deviceId,
       success: (res) => {
+        console.log('getBLEDeviceServices', res)
         for (let i = 0; i < res.services.length; i++) {
           if (res.services[i].isPrimary) {
             this.getBLEDeviceCharacteristics(deviceId, res.services[i].uuid)
-            return
+            // return
           }
         }
       }
     })
   },
   getBLEDeviceCharacteristics(deviceId, serviceId) {
+    console.log('deviceId:', deviceId, 'serviceId:', serviceId)
     wx.getBLEDeviceCharacteristics({
       deviceId,
       serviceId,
       success: (res) => {
         console.log('getBLEDeviceCharacteristics success', res.characteristics)
+        let characteristicId = ''
         for (let i = 0; i < res.characteristics.length; i++) {
           let item = res.characteristics[i]
-          if (item.properties.read) {
-            wx.readBLECharacteristicValue({
-              deviceId,
-              serviceId,
-              characteristicId: item.uuid,
-            })
-          }
-          if (item.properties.write) {
+          if (item.properties.read && item.properties.write) {
+            characteristicId = item.uuid
+            console.log('find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', characteristicId, 'properties', item)
             this.setData({
               canWrite: true
             })
-            this._deviceId = deviceId
-            this._serviceId = serviceId
-            this._characteristicId = item.uuid
-            this.writeBLECharacteristicValue()
+            wx.setStorageSync('CONNECT_DEVICEID', deviceId)
+            wx.setStorageSync('CONNECT_SERVICEID', serviceId)
+            wx.setStorageSync('CONNECT_CHARACTERISTICID', characteristicId)
+            break
           }
-          if (item.properties.notify || item.properties.indicate) {
-            wx.notifyBLECharacteristicValueChange({
-              deviceId,
-              serviceId,
-              characteristicId: item.uuid,
-              state: true,
-            })
-          }
+          // if (item.properties.read) {
+          //   wx.readBLECharacteristicValue({
+          //     deviceId,
+          //     serviceId,
+          //     characteristicId: item.uuid,
+          //     success (res1) {
+          //       console.log('readBLECharacteristicValue:', res1.errCode)
+          //     }
+          //   })
+          // }
+          // if (item.properties.write) {
+          //   this.setData({
+          //     canWrite: true
+          //   })
+          //   this._deviceId = deviceId
+          //   this._serviceId = serviceId
+          //   this._characteristicId = item.uuid
+          //   this.writeBLECharacteristicValue()
+          // }
+          // if (item.properties.notify || item.properties.indicate) {
+          //   wx.notifyBLECharacteristicValueChange({
+          //     deviceId,
+          //     serviceId,
+          //     characteristicId: item.uuid,
+          //     state: true,
+          //   })
+          // }
         }
       },
       fail(res) {
