@@ -218,7 +218,7 @@ Page({
       deviceId,
       serviceId,
       success: (res) => {
-        console.log('getBLEDeviceCharacteristics success', res.characteristics)
+        console.log('getBLEDeviceCharacteristics success, serviceId:', serviceId, res.characteristics)
         let characteristicId = ''
         for (let i = 0; i < res.characteristics.length; i++) {
           let item = res.characteristics[i]
@@ -231,7 +231,7 @@ Page({
             wx.setStorageSync('CONNECT_DEVICEID', deviceId)
             wx.setStorageSync('CONNECT_SERVICEID', serviceId)
             wx.setStorageSync('CONNECT_CHARACTERISTICID', characteristicId)
-            break
+            // break
           }
           // if (item.properties.read) {
           //   wx.readBLECharacteristicValue({
