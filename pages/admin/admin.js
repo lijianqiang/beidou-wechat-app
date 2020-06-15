@@ -220,7 +220,7 @@ Page({
         wx.showToast({
           title: '蓝牙开启中',
           icon: 'loading',
-          duration: 4000
+          duration: 2000
         });
         console.log('notifyBLECharacteristicValueChange success', res)
         // 操作之前先监听，保证第一时间获取数据
@@ -251,7 +251,7 @@ Page({
           console.log('request:', requestHeader, ', response:', responseHeader, ', result:', header)
           if (responseHeader === header) {
             wx.showToast({
-              title: '返回值解析成功',
+              title: '解析成功',
               icon: 'success',
               duration: 1000
             })
@@ -275,7 +275,8 @@ Page({
       },
       fail: function (err) {
         wx.showToast({
-          title: '蓝牙通信开启失败',
+          title: '蓝牙通信失败',
+          icon: 'none',
           duration: 4000
         })
         console.log('启动notify:', err);

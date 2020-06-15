@@ -498,7 +498,7 @@ Page({
         wx.showToast({
           title: '蓝牙开启中',
           icon: 'loading',
-          duration: 3000
+          duration: 2000
         });
         console.log('notifyBLECharacteristicValueChange success', res)
         // 操作之前先监听，保证第一时间获取数据
