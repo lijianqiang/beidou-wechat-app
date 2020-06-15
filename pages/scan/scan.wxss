@@ -39,5 +39,5 @@ page {
   position: absolute;
   display: inline-block;
   right: 30px;
-  top: -50px;
+  bottom: 24px;
 }

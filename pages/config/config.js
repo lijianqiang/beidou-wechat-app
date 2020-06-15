@@ -1,4 +1,23 @@
 // pages/config/config.js
+const NOTIFY_UUID = '0000FFE4-0000-1000-8000-00805F9B34FB'
+const WRITE_UUID = '0000FFE9-0000-1000-8000-00805F9B34FB'
+
+function getHeader(param) {
+  let at = param.indexOf(',')
+  at = at > 0 ? at : 0
+  return param.substring(0, at)
+}
+
+function str2decimal(str) {
+  var arr = str.split('').map(item => {
+    return item.charCodeAt(0)
+  });
+  var result = arr.reduce((total, currentValue) => {
+    return total ^ currentValue
+  }, 0);
+  return result < 16 ? '0' + result.toString(16).toUpperCase() : result.toString(16).toUpperCase();
+}
+
 function inArray(arr, key, val) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i][key] === val) {
@@ -29,6 +48,21 @@ function stringToBytes(str) {
   return array.buffer;
 }
 
+const MAP = {
+  '$CCYJCX': '$HFCSXX',
+  '$CCYDPD': '$HFYDPD',
+  '$CCYDDK': '$HFYDDK',
+  '$CCBDSZ': '$HFBDSC',
+  '$CCGPSZ': '$HFGPSC',
+  '$CCLYSZ': '$HFLYSC',
+  '$CCXLSZ': '$HFXLSC',
+  '$CCCKSZ': '$HFCKSC',
+  '$CCRZSZ': '$HFRZSC',
+  '$CCGJSZ': '$HFGJSC',
+  '$CCBBCX': '$HFBBXX',
+  '$CCREST': '设备复位'
+}
+
 Page({
 
   /**
@@ -41,7 +75,11 @@ Page({
     chs: [],
     result: '',
     inputParam: '$CCYJCX,0*14',
-    outputResult: ''
+    outputResult: '',
+    requestHeader: '',
+    requestLoading: false,
+    canSend: false,
+    isIphone: true,
   },
 
   /**
@@ -50,52 +88,19 @@ Page({
   onLoad: function (options) {
     this.initNotify()
 
-    // 操作之前先监听，保证第一时间获取数据
-    wx.onBLECharacteristicValueChange((characteristic) => {
-      console.log('onBLECharacteristicValueChange:', characteristic)
-     
-      let buffer = characteristic.value
-      let dataView = new DataView(buffer)
-      let head = dataView.getUint8(0).toString(16)
-      console.log('onBLECharacteristicValueChange head', head)
-      if ('24' !== head) {
-        console.log('onBLECharacteristicValueChange 非法返回值', ab2hex(characteristic.value))
-        return
-      }
-      console.log("拿到的数据")
-      console.log("dataView.byteLength", dataView.byteLength)
-      let valueShow = ''
-      for (let i = 0; i < dataView.byteLength; i++) {
-        // console.log("0x" + dataView.getUint8(i).toString(16))
-        // console.log('char:', String.fromCharCode(parseInt(dataView.getUint8(i).toString(16),16)))
-        // dataResult.push(dataView.getUint8(i).toString(16))
-        valueShow += String.fromCharCode(parseInt(dataView.getUint8(i).toString(16),16))
-      }
-      console.log('valueShow', valueShow)
-      this.setData({
-        'outputResult': valueShow
-      })
+    let that = this
+    wx.getSystemInfo({
+      success(res) {
+        console.log('getSystemInfo:', res)
+        let isIphone = res.model.indexOf('iPhone') >= 0
+        console.log('isIphone', isIphone)
+        that.setData({
+          isIphone: isIphone
+        })
+      },
+      fail(err) {
 
-      //
-      const idx = inArray(this.data.chs, 'uuid', characteristic.characteristicId)
-      const data = {}
-      if (idx === -1) {
-        data[`chs[${this.data.chs.length}]`] = {
-          uuid: characteristic.characteristicId,
-          value: ab2hex(characteristic.value)
-        }
-      } else {
-        data[`chs[${idx}]`] = {
-          uuid: characteristic.characteristicId,
-          value: ab2hex(characteristic.value)
-        }
       }
-      // data[`chs[${this.data.chs.length}]`] = {
-      //   uuid: characteristic.characteristicId,
-      //   value: ab2hex(characteristic.value)
-      // }
-      console.log('xxxxxxx data', data)
-      this.setData(data)
     })
   },
 
@@ -162,81 +167,114 @@ Page({
 
   writeBLECharacteristicValue() {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
-    const serviceId = '0000FFE5-0000-1000-8000-00805F9B34FB' //wx.getStorageSync('CONNECT_SERVICEID')
-    const characteristicId = '0000FFE9-0000-1000-8000-00805F9B34FB' //wx.getStorageSync('CONNECT_CHARACTERISTICID')
-    console.log('write!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', characteristicId)
+    const serviceId = wx.getStorageSync('WRITE_SERVICEID')
+    console.log('write!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID)
     // 向蓝牙设备发送一个0x00的16进制数据
     // let buffer = new ArrayBuffer(1)
     // $CCYJCX,0*14
-    var buffer = stringToBytes(this.data.inputParam + "\r\n")
+    let param = this.data.inputParam
+    let requestHeader = getHeader(param)
+    this.setData({
+      'requestHeader': requestHeader,
+      'requestLoading': true,
+      'outputResult': ''
+    })
+    console.log('requestHeader:', requestHeader, ', responseHeader:', MAP[requestHeader])
+    let buffer = stringToBytes(param + "\r\n")
     console.log("发送数据：", buffer)
 
+    let that = this
     let dataView = new DataView(buffer)
     dataView.setUint8(0, 36)
     wx.writeBLECharacteristicValue({
       deviceId,
       serviceId,
-      characteristicId,
+      characteristicId: WRITE_UUID,
       value: buffer,
       success(res) {
         console.log('writeBLECharacteristicValue success', res)
-      }
-    })
-  },
 
-  readBLECharacteristicValue() {
-    const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
-    const serviceId = wx.getStorageSync('CONNECT_SERVICEID')
-    const characteristicId = '0000ffe4-0000-1000-8000-00805f9b34fb' //wx.getStorageSync('CONNECT_CHARACTERISTICID')
-    console.log('read!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', characteristicId)
-    wx.readBLECharacteristicValue({
-      deviceId,
-      serviceId,
-      characteristicId,
-      success(res) {
-        console.log('readBLECharacteristicValue:', res)
-      }
-    })
-    // 操作之前先监听，保证第一时间获取数据
-    wx.onBLECharacteristicValueChange((characteristic) => {
-      console.log('onBLECharacteristicValueChange:', characteristic)
-      console.log('onBLECharacteristicValueChange string value:', ab2hex(characteristic.value))
-      const idx = inArray(this.data.chs, 'uuid', characteristic.characteristicId)
-      const data = {}
-      if (idx === -1) {
-        data[`chs[${this.data.chs.length}]`] = {
-          uuid: characteristic.characteristicId,
-          value: ab2hex(characteristic.value)
-        }
-      } else {
-        data[`chs[${idx}]`] = {
-          uuid: characteristic.characteristicId,
-          value: ab2hex(characteristic.value)
+        if (that.data.isIphone === false) {
+          const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
+          wx.readBLECharacteristicValue({
+            deviceId,
+            serviceId: serviceIdNotify,
+            characteristicId: NOTIFY_UUID,
+            success: function (res) {
+              console.log('readBLECharacteristicValue again')
+            }
+          })
         }
       }
-      // data[`chs[${this.data.chs.length}]`] = {
-      //   uuid: characteristic.characteristicId,
-      //   value: ab2hex(characteristic.value)
-      // }
-      console.log('xxxxxxx data', data)
-      this.setData(data)
     })
   },
 
   initNotify() {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
-    const serviceId = '0000FFE0-0000-1000-8000-00805F9B34FB' // wx.getStorageSync('CONNECT_SERVICEID')
-    const characteristicId = '0000FFE4-0000-1000-8000-00805F9B34FB' //wx.getStorageSync('CONNECT_CHARACTERISTICID')
-
+    const serviceId = wx.getStorageSync('NOTIFY_SERVICEID')
+    console.log('notify serviceId:', serviceId)
+    let that = this
     wx.notifyBLECharacteristicValueChange({
       state: true, // 启用 notify 功能
       deviceId,
       serviceId,
-      characteristicId,
+      characteristicId: NOTIFY_UUID,
       success: function (res) {
+        setTimeout(function () {
+          that.setData({
+            canSend: true
+          })
+        }, 5000);
+        wx.showToast({
+          title: '蓝牙通信开启成功',
+          icon: 'success',
+          duration: 2000
+        })
         console.log('notifyBLECharacteristicValueChange success', res)
+        // 操作之前先监听，保证第一时间获取数据
+        wx.onBLECharacteristicValueChange((characteristic) => {
+          console.log('onBLECharacteristicValueChange:', characteristic)
+
+          let buffer = characteristic.value
+          let dataView = new DataView(buffer)
+          let head = dataView.getUint8(0).toString(16)
+          console.log('onBLECharacteristicValueChange head', head)
+          if ('24' !== head) {
+            console.log('onBLECharacteristicValueChange 非法返回值', ab2hex(characteristic.value))
+            return
+          }
+          console.log("拿到的数据")
+          console.log("dataView.byteLength", dataView.byteLength)
+          let valueShow = ''
+          for (let i = 0; i < dataView.byteLength; i++) {
+            // console.log("0x" + dataView.getUint8(i).toString(16))
+            // console.log('char:', String.fromCharCode(parseInt(dataView.getUint8(i).toString(16),16)))
+            // dataResult.push(dataView.getUint8(i).toString(16))
+            valueShow += String.fromCharCode(parseInt(dataView.getUint8(i).toString(16), 16))
+          }
+          console.log('valueShow', valueShow)
+          let requestHeader = that.data.requestHeader
+          let responseHeader = MAP[requestHeader]
+          let header = getHeader(valueShow)
+          console.log('request:', requestHeader, ', response:', responseHeader, ', result:', header)
+          if (responseHeader === header) {
+            that.setData({
+              'outputResult': valueShow,
+              'requestLoading': false
+            })
+            wx.showToast({
+              title: '返回值解析成功',
+              icon: 'success',
+              duration: 1500
+            })
+          }
+        })
       },
       fail: function (err) {
+        wx.showToast({
+          title: '蓝牙通信开启失败',
+          duration: 4000
+        })
         console.log('启动notify:', err);
       },
     })

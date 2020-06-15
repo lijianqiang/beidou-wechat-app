@@ -1,6 +1,9 @@
 // pages/scan/scan.js
 const app = getApp()
 
+const NOTIFY_UUID = '0000FFE4-0000-1000-8000-00805F9B34FB'
+const WRITE_UUID = '0000FFE9-0000-1000-8000-00805F9B34FB'
+
 function inArray(arr, key, val) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i][key] === val) {
@@ -31,7 +34,8 @@ Page({
     connected: false,
     canWrite: false,
     chs: [],
-    scaning: false
+    scaning: false,
+    begin: false
   },
 
   /**
@@ -66,7 +70,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    this.closeBluetoothAdapter()
   },
 
   /**
@@ -93,7 +97,7 @@ Page({
   ////
   openBluetoothAdapter() {
     console.log('openBluetoothAdapter')
-    this.setData({scaning: true})
+    this.setData({begin: true, scaning: true})
     wx.openBluetoothAdapter({
       mode: 'central',
       success: (res) => {
@@ -175,6 +179,7 @@ Page({
     const ds = e.currentTarget.dataset
     const deviceId = ds.deviceId
     const name = ds.name || deviceId
+    wx.setStorageSync('CONNECT_DEVICEID', deviceId)
     wx.createBLEConnection({
       deviceId,
       success: (res) => {
@@ -206,7 +211,6 @@ Page({
         for (let i = 0; i < res.services.length; i++) {
           if (res.services[i].isPrimary) {
             this.getBLEDeviceCharacteristics(deviceId, res.services[i].uuid)
-            // return
           }
         }
       }
@@ -219,19 +223,18 @@ Page({
       serviceId,
       success: (res) => {
         console.log('getBLEDeviceCharacteristics success, serviceId:', serviceId, res.characteristics)
-        let characteristicId = ''
         for (let i = 0; i < res.characteristics.length; i++) {
           let item = res.characteristics[i]
-          if (item.properties.read && item.properties.write) {
-            characteristicId = item.uuid
-            console.log('find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', characteristicId, 'properties', item)
+          if (NOTIFY_UUID === item.uuid) {
+            console.log('notify find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', NOTIFY_UUID, 'properties', item)
+            wx.setStorageSync('NOTIFY_SERVICEID', serviceId)
+          }
+          if (WRITE_UUID === item.uuid) {
+            console.log('write find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID, 'properties', item)
+            wx.setStorageSync('WRITE_SERVICEID', serviceId)
             this.setData({
               canWrite: true
             })
-            wx.setStorageSync('CONNECT_DEVICEID', deviceId)
-            wx.setStorageSync('CONNECT_SERVICEID', serviceId)
-            wx.setStorageSync('CONNECT_CHARACTERISTICID', characteristicId)
-            // break
           }
           // if (item.properties.read) {
           //   wx.readBLECharacteristicValue({
@@ -301,9 +304,11 @@ Page({
     })
   },
   closeBluetoothAdapter() {
-    this.setData({scaning: false})
-    wx.closeBluetoothAdapter()
-    this._discoveryStarted = false
+    if (this.data.begin) {
+      this.setData({scaning: false})
+      wx.closeBluetoothAdapter()
+      this._discoveryStarted = false
+    }
   },
 
   toPageConfig: function() {

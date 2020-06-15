@@ -2,6 +2,12 @@
 //获取应用实例
 const app = getApp()
 
+function str2decimal(str){
+  var arr = str.split('').map(item=>{return item.charCodeAt(0)});
+  var result = arr.reduce((total,currentValue)=>{return total^currentValue},0);
+  return result <16? '0' + result.toString(16).toUpperCase() :result.toString(16).toUpperCase();
+}
+
 Page({
   data: {
     motto: 'Hello World',
@@ -31,5 +37,24 @@ Page({
     wx.navigateTo({
       url: '../scan/scan'
     })
+    // console.log(str2decimal('CCREST,0'))
+    // const MAP = {
+    //   '$CCYJCX': '$HFCSXX',
+    //   '$CCYDPD': '$HFYDPD',
+    //   '$CCYDDK': '$HFYDDK',
+    //   '$CCBDSZ': '$HFBDSC',
+    //   '$CCGPSZ': '$HFGPSC',
+    //   '$CCLYSZ': '$HFLYSC',
+    //   '$CCXLSZ': '$HFXLSC',
+    //   '$CCCKSZ': '$HFCKSC',
+    //   '$CCRZSZ': '$HFRZSC',
+    //   '$CCGJSZ': '$HFGJSC',
+    //   '$CCBBCX': '$HFBBXX',
+    //   '$CCREST': '设备复位'
+    // }
+    // let param = '$CCYJCX,0*14'
+    // let at = param.indexOf(',')
+    // let cmd = param.substring(0, at)
+    // console.log('cmd:', cmd, ', res:', MAP[cmd])
   }
 })

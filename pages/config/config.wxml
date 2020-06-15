@@ -27,7 +27,7 @@
         </view>
 		
 
-		<button class="weui-btn" bindtap="queryInfo">发送</button>
+		<button wx:if="{{canSend}}" class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}">发送</button>
 		<!-- <view class="weui-cells weui-cells_after-title">
 			<view class="weui-cell">
 				<view class="weui-cell__bd">
