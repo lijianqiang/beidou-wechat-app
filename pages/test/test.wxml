@@ -1,0 +1,34 @@
+<!--pages/test/test.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">通信调试</view>
+		<view class="page__desc">蓝牙连接成功后请等待5~9秒, 手动输入参数并检验返回值</view>
+	</view>
+
+	<view class="page__bd">
+
+
+		<view class="weui-cells__title">参数</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="请输入请求参数" value="{{inputParam}}" bindinput="bindInputParam" />
+				</view>
+			</view>
+		</view>
+
+    <button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}">发送</button>
+    </view> 
+
+		<view class="weui-cells__title">返回值</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell">
+				<view class="weui-cell__bd">
+					<textarea class="weui-textarea"  value="{{outputResult}}" style="height: 6.3em" disabled/>
+					</view>
+            </view>
+        </view>
+		
+
+		
+</view>

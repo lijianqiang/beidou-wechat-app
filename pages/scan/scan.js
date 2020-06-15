@@ -313,7 +313,7 @@ Page({
 
   toPageConfig: function() {
     wx.navigateTo({
-      url: '../config/config'
+      url: '../admin/admin'
     })
   }
 })

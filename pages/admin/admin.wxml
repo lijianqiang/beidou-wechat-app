@@ -1,0 +1,149 @@
+<!--pages/admin/admin.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">配置</view>
+		<view class="page__desc">蓝牙连接成功后请等待5~9秒</view>
+	</view>
+
+	<view class="page__bd">
+		<view class="weui-cells__title">查询参数</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="请输入请求查询参数" value="{{inputParam}}" bindinput="bindInputParam" />
+				</view>
+			</view>
+		</view>
+
+		
+    <view class="weui-btn-area">
+      <button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}" >查询</button>
+    </view>
+		
+		<view class="weui-cells__title">返回值</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell">
+				<view class="weui-cell__bd">
+					<textarea class="weui-textarea" value="{{outputResult}}" style="height: 3.3em" disabled/>
+					</view>
+            </view>
+        </view>
+      </view> 
+      <!-- -->
+      <view class="weui-cells__title">1.序列号</view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="序列号" value="{{detail.key1}}" disabled/>
+                </view>
+            </view>
+        </view>
+
+      <view class="weui-cells__title">2.版本</view>
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="版本" value="{{detail.key2}}" disabled/>
+                </view>
+            </view>
+        </view>
+
+      <view class="weui-cells__title">3.功率</view>
+      <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="功率" value="{{detail.key3}}" disabled/>
+                </view>
+            </view>
+      </view>
+      <view class="weui-cells__title">4.发射状态</view>
+      <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="发射状态" value="{{detail.key4}}" disabled/>
+                </view>
+            </view>
+      </view>
+      <view class="weui-cells__title">5.移动网络地址端口</view>
+      <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="移动网络地址端口" value="{{detail.key5}}" disabled/>
+                </view>
+            </view>
+      </view>
+      <view class="weui-cells__title">6.北斗上报地址</view>
+      <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="北斗上报地址" value="{{detail.key6}}" disabled/>
+                </view>
+            </view>
+      </view>
+      <!-- <view class="weui-cells__title">7.移动网络开关</view> -->
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_switch">
+                <view class="weui-cell__bd">7.移动网络开关</view>
+                <view class="weui-cell__ft">
+                    <switch checked="{{detail.key7 === '1'}}" disabled/>
+                </view>
+            </view>
+        </view>
+      
+      <!-- <view class="weui-cells__title">8.北斗上报通道开关</view> -->
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_switch">
+                <view class="weui-cell__bd">8.北斗上报通道开关</view>
+                <view class="weui-cell__ft">
+                    <switch checked="{{detail.key8 === '1'}}" disabled/>
+                </view>
+            </view>
+        </view>
+
+      <!-- <view class="weui-cells__title">9.蓝牙开关</view> -->
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_switch">
+                <view class="weui-cell__bd">9.蓝牙开关</view>
+                <view class="weui-cell__ft">
+                    <switch checked="{{detail.key9 === '1'}}" disabled/>
+                </view>
+            </view>
+        </view>
+      
+      <!-- <view class="weui-cells__title">10.串口数据开关</view> -->
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_switch">
+                <view class="weui-cell__bd">10.串口数据开关</view>
+                <view class="weui-cell__ft">
+                    <switch checked="{{detail.key10 === '1'}}" disabled/>
+                </view>
+            </view>
+        </view>
+      
+      <!-- <view class="weui-cells__title">11.FLASH日志开关</view> -->
+        <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_switch">
+                <view class="weui-cell__bd">11.FLASH日志开关</view>
+                <view class="weui-cell__ft">
+                    <switch checked="{{detail.key11 === '1'}}" disabled/>
+                </view>
+            </view>
+        </view>
+
+      <view class="weui-cells__title">12.电量百分比</view>
+      <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input">
+                <view class="weui-cell__bd">
+                    <input class="weui-input" placeholder="电量百分比" value="{{detail.key12}}"/>
+                </view>
+            </view>
+      </view>
+
+      <view class="weui-btn-area">
+      <button class="weui-btn" bindtap="toPageModify" type="warn" >修改配置</button>
+    </view>
+
+    <view class="weui-footer">
+            <view class="weui-footer__text">Copyright © 2020</view>
+        </view>
+</view>

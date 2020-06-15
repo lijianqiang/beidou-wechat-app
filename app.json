@@ -3,7 +3,10 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/scan/scan",
-    "pages/config/config"
+    "pages/config/config",
+    "pages/test/test",
+    "pages/admin/admin",
+    "pages/modify/modify"
   ],
   "window": {
     "backgroundTextStyle": "light",

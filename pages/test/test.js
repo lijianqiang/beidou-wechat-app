@@ -258,15 +258,6 @@ Page({
           let header = getHeader(valueShow)
           console.log('request:', requestHeader, ', response:', responseHeader, ', result:', header)
           if (responseHeader === header) {
-            let end = valueShow.indexOf('*')
-            let src = valueShow.substring(0, end);
-            let keys = src.split(',')
-            let length = keys.length
-            let detail = {}
-            for (let i=1;i<length;i++) {
-              detail['key' + i] = keys[i]
-            }
-            console.log('detail', detail)
             that.setData({
               'outputResult': valueShow,
               'requestLoading': false

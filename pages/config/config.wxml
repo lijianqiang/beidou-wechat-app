@@ -2,11 +2,11 @@
 <view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
 	<view class="page__hd">
 		<view class="page__title">配置</view>
-		<view class="page__desc">协议参数请求测试</view>
+		<view class="page__desc">蓝牙连接成功后请等待5~9秒</view>
 	</view>
 
 	<view class="page__bd">
-		
+
 
 		<view class="weui-cells__title">参数</view>
 		<view class="weui-cells weui-cells_after-title">
@@ -17,17 +17,10 @@
 			</view>
 		</view>
 
-		<view class="weui-cells__title">返回值</view>
-		<view class="weui-cells weui-cells_after-title">
-			<view class="weui-cell">
-				<view class="weui-cell__bd">
-					<textarea class="weui-textarea" placeholder="返回值" value="{{outputResult}}" style="height: 3.3em" />
-                </view>
-            </view>
-        </view>
+		
 		
 
-		<button wx:if="{{canSend}}" class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}">发送</button>
+		<button wx:if="{{canSend}}" class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}">发送查询</button>
 		<!-- <view class="weui-cells weui-cells_after-title">
 			<view class="weui-cell">
 				<view class="weui-cell__bd">
@@ -35,5 +28,13 @@
 					</view>
       </view>
       </view>-->
+			<view class="weui-cells__title">返回值</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell">
+				<view class="weui-cell__bd">
+					<textarea class="weui-textarea" placeholder="返回值" value="{{outputResult}}" style="height: 3.3em" />
+					</view>
+            </view>
+        </view>
       </view> 
 </view>

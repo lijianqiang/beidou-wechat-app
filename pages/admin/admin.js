@@ -1,4 +1,5 @@
-// pages/config/config.js
+// pages/admin/admin.js
+
 const NOTIFY_UUID = '0000FFE4-0000-1000-8000-00805F9B34FB'
 const WRITE_UUID = '0000FFE9-0000-1000-8000-00805F9B34FB'
 
@@ -80,6 +81,7 @@ Page({
     requestLoading: false,
     canSend: false,
     isIphone: true,
+    detail: {}
   },
 
   /**
@@ -160,7 +162,6 @@ Page({
   },
 
   queryInfo: function () {
-    //
     console.log('input', this.data.inputParam)
     this.writeBLECharacteristicValue()
   },
@@ -177,7 +178,8 @@ Page({
     this.setData({
       'requestHeader': requestHeader,
       'requestLoading': true,
-      'outputResult': ''
+      'outputResult': '',
+      'detail': {}
     })
     console.log('requestHeader:', requestHeader, ', responseHeader:', MAP[requestHeader])
     let buffer = stringToBytes(param + "\r\n")
@@ -224,7 +226,7 @@ Page({
           that.setData({
             canSend: true
           })
-        }, 5000);
+        }, 1500);
         wx.showToast({
           title: '蓝牙通信开启成功',
           icon: 'success',
@@ -258,6 +260,11 @@ Page({
           let header = getHeader(valueShow)
           console.log('request:', requestHeader, ', response:', responseHeader, ', result:', header)
           if (responseHeader === header) {
+            wx.showToast({
+              title: '返回值解析成功',
+              icon: 'success',
+              duration: 1000
+            })
             let end = valueShow.indexOf('*')
             let src = valueShow.substring(0, end);
             let keys = src.split(',')
@@ -268,14 +275,11 @@ Page({
             }
             console.log('detail', detail)
             that.setData({
+              'detail': detail,
               'outputResult': valueShow,
               'requestLoading': false
             })
-            wx.showToast({
-              title: '返回值解析成功',
-              icon: 'success',
-              duration: 1500
-            })
+            
           }
         })
       },
@@ -289,5 +293,10 @@ Page({
     })
 
 
+  },
+  toPageModify: function() {
+    wx.navigateTo({
+      url: '../test/test'
+    })
   }
 })
