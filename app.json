@@ -1,12 +1,12 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
+    "pages/modify/modify",
     "pages/scan/scan",
     "pages/config/config",
     "pages/test/test",
     "pages/admin/admin",
-    "pages/modify/modify"
+    "pages/logs/logs"
   ],
   "window": {
     "backgroundTextStyle": "light",

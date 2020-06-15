@@ -89,21 +89,6 @@ Page({
    */
   onLoad: function (options) {
     
-
-    let that = this
-    wx.getSystemInfo({
-      success(res) {
-        console.log('getSystemInfo:', res)
-        let isIphone = res.model.indexOf('iPhone') >= 0
-        console.log('isIphone', isIphone)
-        that.setData({
-          isIphone: isIphone
-        })
-      },
-      fail(err) {
-
-      }
-    })
   },
 
   /**
@@ -185,7 +170,7 @@ Page({
     let buffer = stringToBytes(param + "\r\n")
     console.log("发送数据：", buffer)
 
-    let that = this
+    let isIphone = wx.getStorageSync('IS_IPHONE')
     let dataView = new DataView(buffer)
     dataView.setUint8(0, 36)
     wx.writeBLECharacteristicValue({
@@ -196,7 +181,7 @@ Page({
       success(res) {
         console.log('writeBLECharacteristicValue success', res)
 
-        if (that.data.isIphone === false) {
+        if (isIphone === false) {
           const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
           wx.readBLECharacteristicValue({
             deviceId,
@@ -227,11 +212,16 @@ Page({
             canSend: true
           })
         }, 1500);
+        // wx.showToast({
+        //   title: '蓝牙通信开启成功',
+        //   icon: 'success',
+        //   duration: 2000
+        // })
         wx.showToast({
-          title: '蓝牙通信开启成功',
-          icon: 'success',
-          duration: 2000
-        })
+          title: '蓝牙开启中',
+          icon: 'loading',
+          duration: 4000
+        });
         console.log('notifyBLECharacteristicValueChange success', res)
         // 操作之前先监听，保证第一时间获取数据
         wx.onBLECharacteristicValueChange((characteristic) => {
@@ -296,7 +286,15 @@ Page({
   },
   toPageModify: function() {
     wx.navigateTo({
+      url: '../modify/modify'
+    })
+  },
+  toPageTest: function() {
+    wx.navigateTo({
       url: '../test/test'
     })
+  },
+  resetDevice: function() {
+    
   }
 })

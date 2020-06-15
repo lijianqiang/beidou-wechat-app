@@ -23,7 +23,17 @@ Page({
     })
   },
   onLoad: function () {
-    
+    wx.getSystemInfo({
+      success(res) {
+        console.log('getSystemInfo:', res)
+        let isIphone = res.model.indexOf('iPhone') >= 0
+        console.log('isIphone', isIphone)
+        wx.setStorageSync('IS_IPHONE', isIphone)
+      },
+      fail(err) {
+        
+      }
+    })
   },
   getUserInfo: function(e) {
     console.log(e)

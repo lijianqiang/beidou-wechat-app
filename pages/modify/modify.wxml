@@ -1,2 +1,266 @@
 <!--pages/modify/modify.wxml-->
-<text>pages/modify/modify.wxml</text>
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">修改配置</view>
+		<view class="page__desc">蓝牙连接成功后请等待5~9秒</view>
+	</view>
+
+	<view class="page__bd">
+    <!-- 4.移动网络上报频度设置 -->
+		<view class="weui-cells__title">移动网络上报频度设置</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">上报频度</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="0-60" value="{{detail4.key1}}" bindinput="input_4_1"/>
+				</view>
+			</view>
+		</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_switch">
+				<view class="weui-cell__bd">网络上报开关</view>
+				<view class="weui-cell__ft">
+					<switch checked="{{detail4.key2 === '1'}}" bindchange="input_4_2"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query4">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update4">修改</button>
+	  </view>
+
+    <!-- 6 移动网络上报地址和端口号设置 -->
+		<view class="weui-cells__title">移动网络上报地址和端口号设置</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">地址</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="上报地址" value="{{detail6.key1}}" bindinput="input_6_1"/>
+				</view>
+			</view>
+		</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">端口</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="上报端口" value="{{detail6.key2}}" bindinput="input_6_2"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query6">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update6">修改</button>
+	  </view>
+
+    <!-- 8 北斗上报地址设置 -->
+		<view class="weui-cells__title">北斗上报地址设置</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">上报地址</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="输入地址" value="{{detail8.key1}}" bindinput="input_8_1"/>
+				</view>
+			</view>
+		</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">上报频度</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="输入频度(0-9999)" value="{{detail8.key2}}" bindinput="input_8_2"/>
+				</view>
+			</view>
+		</view>
+    <view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_switch">
+				<view class="weui-cell__bd">北斗开关</view>
+				<view class="weui-cell__ft">
+					<switch checked="{{detail8.key3 === '1'}}" bindchange="input_8_3"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query8">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update8">修改</button>
+	  </view>
+
+    <!-- 10 GPS输出设置 -->
+		<view class="weui-cells__title">GPS输出设置</view>
+    <view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_switch">
+				<view class="weui-cell__bd">GPS开关</view>
+				<view class="weui-cell__ft">
+					<switch checked="{{detail10.key1 === '1'}}" bindchange="input_10_1"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query10">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update10">修改</button>
+	  </view>
+
+
+    <!-- 12 蓝牙开关状态设置 -->
+		<view class="weui-cells__title">蓝牙开关状态设置</view>
+    <view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_switch">
+				<view class="weui-cell__bd">蓝牙开关</view>
+				<view class="weui-cell__ft">
+					<switch checked="{{detail12.key1 === '1'}}" bindchange="input_12_1"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query12">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update12">修改</button>
+	  </view>
+
+
+    <!-- 14 序列号设置 -->
+		<view class="weui-cells__title">序列号设置</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">序列号</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="请输入序列号" value="{{detail14.key1}}" bindinput="input_14_1"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query14">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update14">修改</button>
+	  </view>
+
+    <!-- 16 串口信息设置 -->
+		<view class="weui-cells__title">串口信息设置</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">波特率</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="输入波特率" value="{{detail16.key1}}" bindinput="input_16_1"/>
+				</view>
+			</view>
+		</view>
+    <view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_switch">
+				<view class="weui-cell__bd">串口开关</view>
+				<view class="weui-cell__ft">
+					<switch checked="{{detail16.key2 === '1'}}" bindchange="input_16_2"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query16">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update16">修改</button>
+	  </view>
+
+
+    <!-- 18 日志开关状态设置 -->
+		<view class="weui-cells__title">日志开关状态设置</view>
+    <view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_switch">
+				<view class="weui-cell__bd">日志开关</view>
+				<view class="weui-cell__ft">
+					<switch checked="{{detail18.key1 === '1'}}" bindchange="input_18_1"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query18">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update18">修改</button>
+	  </view>
+
+    <!-- 20 告警参数设置 -->
+		<view class="weui-cells__title">告警参数设置</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">电量百分比</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="电量百分比(0-100)" value="{{detail20.key1}}" bindinput="input_20_1"/>
+				</view>
+			</view>
+		</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">超高告警</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="0-9999999" value="{{detail20.key2}}" bindinput="input_20_2"/>
+				</view>
+			</view>
+		</view>
+    <view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">超速告警</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="0-9999" value="{{detail20.key3}}" bindinput="input_20_3"/>
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini" bindtap="query20">查询</button>
+		   <button class="mini-btn" size="mini" bindtap="update20">修改</button>
+	  </view>
+
+    <!-- 22 电量信息查询 -->
+		<view class="weui-cells__title">电量信息查询</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">电量电压值</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" />
+				</view>
+			</view>
+		</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">电量百分比</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" />
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini">查询</button>
+	  </view>
+
+    <!-- 26 版本信息查询 -->
+		<view class="weui-cells__title">版本信息查询</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">版本信息</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" />
+				</view>
+			</view>
+		</view>
+    <view class="button-sp-area">
+       <button class="mini-btn" size="mini">查询</button>
+	  </view>
+    <!-- end -->
+	</view>
+</view>

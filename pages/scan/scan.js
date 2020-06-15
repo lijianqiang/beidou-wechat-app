@@ -218,6 +218,7 @@ Page({
   },
   getBLEDeviceCharacteristics(deviceId, serviceId) {
     console.log('deviceId:', deviceId, 'serviceId:', serviceId)
+    let that = this
     wx.getBLEDeviceCharacteristics({
       deviceId,
       serviceId,
@@ -228,6 +229,7 @@ Page({
           if (NOTIFY_UUID === item.uuid) {
             console.log('notify find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', NOTIFY_UUID, 'properties', item)
             wx.setStorageSync('NOTIFY_SERVICEID', serviceId)
+            that.initNotify()
           }
           if (WRITE_UUID === item.uuid) {
             console.log('write find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID, 'properties', item)
@@ -311,7 +313,32 @@ Page({
     }
   },
 
+  initNotify() {
+    const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
+    const serviceId = wx.getStorageSync('NOTIFY_SERVICEID')
+    console.log('notify serviceId:', serviceId)
+    wx.notifyBLECharacteristicValueChange({
+      state: true, // 启用 notify 功能
+      deviceId,
+      serviceId,
+      characteristicId: NOTIFY_UUID,
+      success: function (res) {
+        console.log('notifyBLECharacteristicValueChange success', res)
+      },
+      fail: function (err) {
+        wx.showToast({
+          title: '蓝牙通信开启失败',
+          duration: 4000
+        })
+        console.log('启动notify:', err);
+      },
+    })
+
+
+  },
+
   toPageConfig: function() {
+    
     wx.navigateTo({
       url: '../admin/admin'
     })

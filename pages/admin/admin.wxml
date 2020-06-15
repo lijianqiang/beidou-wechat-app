@@ -6,28 +6,28 @@
 	</view>
 
 	<view class="page__bd">
-		<view class="weui-cells__title">查询参数</view>
-		<view class="weui-cells weui-cells_after-title">
+		<!-- <view class="weui-cells__title">查询参数</view> -->
+		<!-- <view class="weui-cells weui-cells_after-title">
 			<view class="weui-cell weui-cell_input">
 				<view class="weui-cell__bd">
 					<input class="weui-input" placeholder="请输入请求查询参数" value="{{inputParam}}" bindinput="bindInputParam" />
 				</view>
 			</view>
-		</view>
+		</view> -->
 
 		
     <view class="weui-btn-area">
-      <button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}" >查询</button>
+      <button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}" >一键查询</button>
     </view>
 		
-		<view class="weui-cells__title">返回值</view>
-		<view class="weui-cells weui-cells_after-title">
+		<!-- <view class="weui-cells__title">返回值</view> -->
+		<!-- <view class="weui-cells weui-cells_after-title">
 			<view class="weui-cell">
 				<view class="weui-cell__bd">
 					<textarea class="weui-textarea" value="{{outputResult}}" style="height: 3.3em" disabled/>
 					</view>
             </view>
-        </view>
+        </view> -->
       </view> 
       <!-- -->
       <view class="weui-cells__title">1.序列号</view>
@@ -140,8 +140,10 @@
       </view>
 
       <view class="weui-btn-area">
-      <button class="weui-btn" bindtap="toPageModify" type="warn" >修改配置</button>
-    </view>
+      <button class="weui-btn" bindtap="toPageModify" type="primary" >修改配置</button>
+      <button class="weui-btn" bindtap="toPageTest" type="default" >通信调试</button>
+      <button class="weui-btn" bindtap="resetDevice" type="warn" >设备重启</button>
+      </view>
 
     <view class="weui-footer">
             <view class="weui-footer__text">Copyright © 2020</view>
