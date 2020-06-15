@@ -17,7 +17,7 @@
 
 		
     <view class="weui-btn-area">
-      <button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}" disabled="{{requestLoading}}" >一键查询</button>
+      <button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}"  >一键查询</button>
     </view>
 		
 		<!-- <view class="weui-cells__title">返回值</view> -->

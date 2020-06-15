@@ -148,17 +148,17 @@ Page({
 
   queryInfo: function () {
     console.log('input', this.data.inputParam)
-    this.writeBLECharacteristicValue()
+    this.writeBLECharacteristicValue(this.data.inputParam)
   },
 
-  writeBLECharacteristicValue() {
+  writeBLECharacteristicValue(param) {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
     const serviceId = wx.getStorageSync('WRITE_SERVICEID')
     console.log('write!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID)
     // 向蓝牙设备发送一个0x00的16进制数据
     // let buffer = new ArrayBuffer(1)
     // $CCYJCX,0*14
-    let param = this.data.inputParam
+    // let param = this.data.inputParam
     let requestHeader = getHeader(param)
     this.setData({
       'requestHeader': requestHeader,
@@ -295,6 +295,6 @@ Page({
     })
   },
   resetDevice: function() {
-    
+
   }
 })
