@@ -508,7 +508,7 @@ Page({
           that.setData({
             canSend: true
           })
-        }, 1500);
+        }, 1200);
         // wx.showToast({
         //   title: '蓝牙通信开启成功',
         //   icon: 'success',
@@ -517,7 +517,7 @@ Page({
         wx.showToast({
           title: '蓝牙开启中',
           icon: 'loading',
-          duration: 2000
+          duration: 1500
         });
         console.log('notifyBLECharacteristicValueChange success', res)
         // 操作之前先监听，保证第一时间获取数据

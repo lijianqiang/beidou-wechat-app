@@ -2,7 +2,7 @@
 <view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
 	<view class="page__hd">
 		<view class="page__title">配置</view>
-		<view class="page__desc">蓝牙连接成功后请等待3~5秒,若未响应,请再次点击查询</view>
+		<view class="page__desc">蓝牙连接成功后请等待3秒,若未响应,请再次查询</view>
 	</view>
 
 	<view class="page__bd">
