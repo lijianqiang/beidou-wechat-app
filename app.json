@@ -6,7 +6,8 @@
     "pages/config/config",
     "pages/test/test",
     "pages/admin/admin",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/file/file"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -59,6 +59,7 @@ const MAP = {
   '$CCCKSZ': '$HFCKSC',
   '$CCRZSZ': '$HFRZSC',
   '$CCGJSZ': '$HFGJSC',
+  '$CCDLCX': '$HFDLXX',
   '$CCBBCX': '$HFBBXX',
   '$CCREST': '设备复位'
 }

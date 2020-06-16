@@ -56,7 +56,15 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let isRestDevice = wx.getStorageSync('REST_DEVICE')
+    if (isRestDevice === true) {
+      wx.setStorageSync('REST_DEVICE', false)
+      this.closeBLEConnection()
+      this.closeBluetoothAdapter()
+      this.setData({
+        devices: []
+      })
+    }
   },
 
   /**

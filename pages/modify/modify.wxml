@@ -228,7 +228,7 @@
 					<view class="weui-label">电量电压值</view>
 				</view>
 				<view class="weui-cell__bd">
-					<input class="weui-input" />
+					<input class="weui-input" value="{{detail22.key1}}" bindinput="input_22_1"/>
 				</view>
 			</view>
 		</view>
@@ -238,12 +238,12 @@
 					<view class="weui-label">电量百分比</view>
 				</view>
 				<view class="weui-cell__bd">
-					<input class="weui-input" />
+					<input class="weui-input" value="{{detail22.key2}}" bindinput="input_22_2"/>
 				</view>
 			</view>
 		</view>
     <view class="button-sp-area">
-       <button class="mini-btn" size="mini">查询</button>
+       <button class="mini-btn" size="mini" bindtap="query22">查询</button>
 	  </view>
 
     <!-- 26 版本信息查询 -->
@@ -254,12 +254,12 @@
 					<view class="weui-label">版本信息</view>
 				</view>
 				<view class="weui-cell__bd">
-					<input class="weui-input" />
+					<input class="weui-input" value="{{detail26.key1}}" bindinput="input_26_1"/>
 				</view>
 			</view>
 		</view>
     <view class="button-sp-area">
-       <button class="mini-btn" size="mini">查询</button>
+       <button class="mini-btn" size="mini" bindtap="query26">查询</button>
 	  </view>
     <!-- end -->
 	</view>

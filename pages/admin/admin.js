@@ -296,6 +296,33 @@ Page({
     })
   },
   resetDevice: function() {
-
+    let that = this
+    wx.showModal({
+      title: '注意',
+      content: '您正在进行设备重启,请确认',
+      confirmText: "确认",
+      cancelText: "取消",
+      success: function (res) {
+          console.log('showModal', res);
+          if (res.confirm) {
+              console.log('用户点击主操作')
+              that.writeBLECharacteristicValue('$CCREST,0*0C')
+              wx.showToast({
+                title: '设备重启中',
+                icon: 'loading',
+                duration: 1500
+              });
+              setTimeout(function () {
+                console.log('navigateBack')
+                wx.setStorageSync('REST_DEVICE', true)
+                wx.navigateBack({
+                  delta: 1
+                })
+              }, 1800)
+          }else{
+              console.log('用户点击辅助操作')
+          }
+      }
+  });
   }
 })

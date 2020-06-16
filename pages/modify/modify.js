@@ -59,6 +59,7 @@ const MAP = {
   '$CCCKSZ': '$HFCKSC',
   '$CCRZSZ': '$HFRZSC',
   '$CCGJSZ': '$HFGJSC',
+  '$CCDLCX': '$HFDLXX',
   '$CCBBCX': '$HFBBXX',
   '$CCREST': '设备复位'
 }
@@ -74,6 +75,7 @@ const REQUEST_CODE = {
   '$CCCKSZ': '16',
   '$CCRZSZ': '18',
   '$CCGJSZ': '20',
+  '$CCDLCX': '22',
   '$CCBBCX': '26',
   '$CCREST': '28'
 }
@@ -424,6 +426,23 @@ Page({
     console.log('update20 request', request)
     this.writeBLECharacteristicValue(request)
   },
+
+  // 22
+  query22: function () {
+    let content = 'CCDLCX,0'
+    let request = '$' + content + '*' + str2decimal(content) + '\r\n'
+    console.log('query22 request', request)
+    this.writeBLECharacteristicValue(request)
+  },
+
+  // 26
+  query26: function () {
+    let content = 'CCBBCX,0'
+    let request = '$' + content + '*' + str2decimal(content) + '\r\n'
+    console.log('query22 request', request)
+    this.writeBLECharacteristicValue(request)
+  },
+
   // 蓝牙方法
   writeBLECharacteristicValue(param) {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
