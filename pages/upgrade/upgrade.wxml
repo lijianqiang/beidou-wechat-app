@@ -1,0 +1,28 @@
+<!--pages/upgrade/upgrade.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">固件升级</view>
+		<view class="page__desc">输入固件下载地址,升级设备</view>
+	</view>
+
+	<view class="page__bd">
+		<view class="weui-cells__title">固件地址</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__bd">
+          <textarea class="weui-textarea"  value="{{address}}" bindinput="bindAddress" style="height: 3.3em"/>
+				</view>
+			</view>
+		</view>
+
+		
+    <view class="weui-btn-area">
+      <button class="weui-btn" bindtap="upgradeDevice" loading="{{requestLoading}}"  >升级设备</button>
+    </view>
+
+    <view class="weui-btn-area">
+      <view>升级进度{{percent}}%</view>
+    </view>
+
+  </view>
+</view>

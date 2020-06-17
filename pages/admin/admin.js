@@ -295,6 +295,11 @@ Page({
       url: '../test/test'
     })
   },
+  toPageUpgrade: function() {
+    wx.navigateTo({
+      url: '../upgrade/upgrade'
+    })
+  },
   resetDevice: function() {
     let that = this
     wx.showModal({
