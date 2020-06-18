@@ -326,7 +326,7 @@ Page({
 
   finishPkgSend() {
     // 发结束的
-    let endCmdStr = '2400000100'
+    let endCmdStr = '2400000600'
     let endCmd = endCmdStr + hexString2decimal(endCmdStr)
     console.log('发结束的', endCmd)
     this.writeBLECharacteristicValue(hexStringToArrayBuffer(endCmd))
