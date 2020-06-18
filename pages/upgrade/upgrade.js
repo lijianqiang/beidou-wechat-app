@@ -265,7 +265,22 @@ Page({
 
         setTimeout(function () {
           self.writeBLECharacteristicValue(stringToBytes(self.data.beginCmd))
-        }, 500)
+          wx.showToast({
+            title: '设备重启中',
+            icon: 'loading',
+            duration: 4000
+          })
+        }, 300)
+        
+        setTimeout(function () {
+            const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
+            wx.createBLEConnection({
+              deviceId,
+              success: (res) => {
+                self.initNotify()
+              }
+            })
+        }, 4000)
       },
       fail: res => {
         console.log('xxxxx', res)
