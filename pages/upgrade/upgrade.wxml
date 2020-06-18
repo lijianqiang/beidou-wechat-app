@@ -21,7 +21,7 @@
     </view>
 
     <view class="weui-btn-area">
-      <view>升级进度{{percent}}%</view>
+      <view>总{{totalCount}}包,发送第{{pkgCount}}包</view>
     </view>
 
   </view>

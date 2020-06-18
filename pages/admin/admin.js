@@ -102,7 +102,21 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.initNotify()
+    let isRestDevice = wx.getStorageSync('REST_DEVICE')
+    if (isRestDevice === true) {
+      wx.showToast({
+        title: '设备重启中',
+        icon: 'success',
+        duration: 1000
+      })
+      setTimeout(function () {
+        wx.navigateBack({
+          delta: 1
+        })
+      }, 1000)
+    } else {
+      this.initNotify()
+    }
   },
 
   /**

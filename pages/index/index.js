@@ -44,6 +44,11 @@ Page({
     })
   },
   toPageSacn: function() {
+    // let srt = '1234567890'
+    // for (let i = 0;i<3;i++) {
+    //   let v = srt.substr(4 * i, 4)
+    //   console.log(v, v.length)
+    // }
     wx.navigateTo({
       url: '../scan/scan'
     })
