@@ -116,14 +116,21 @@ Page({
     filePath: '',
     update_press: null,
     beginCmd: '$1234,1,*12\r\n',
-    endCmd: ''
+    endCmd: '',
+    isBegin: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    let totalCount = wx.getStorageSync('totalCount')
+    if (!totalCount) {
+      totalCount = 0
+    }
+    this.setData({
+      totalCount: totalCount
+    })
   },
 
   /**
@@ -256,6 +263,9 @@ Page({
         console.log('length', res.data.length)
         console.log('rrdata', rrdata)
         let totalCount = res.data.length / (PKG_SIZE * 2)
+        wx.setStorageSync('rrdata', rrdata)
+        wx.setStorageSync('totalCount', totalCount)
+
         self.setData({
           updata_buff: rrdata, //string格式的数据放这里
           updata_buff_cnt: 0,
@@ -263,24 +273,34 @@ Page({
           totalCount: totalCount
         })
 
-        setTimeout(function () {
-          self.writeBLECharacteristicValue(stringToBytes(self.data.beginCmd))
-          wx.showToast({
-            title: '设备重启中',
-            icon: 'loading',
-            duration: 4000
+        if (self.data.isBegin === false) {
+          self.setData({
+            isBegin: true
           })
-        }, 300)
+          setTimeout(function () {
+            self.writeBLECharacteristicValue(stringToBytes(self.data.beginCmd))
+            wx.showToast({
+              title: '设备重启中',
+              icon: 'loading',
+              duration: 8000
+            })
+          }, 300)
+        }
+        
         
         setTimeout(function () {
             const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
             wx.createBLEConnection({
-              deviceId,
+              deviceId: deviceId,
               success: (res) => {
                 self.initNotify()
+              },
+              fail: (err) => {
+                console.log('createBLEConnection fail', err)
               }
+
             })
-        }, 4000)
+        }, 8000)
       },
       fail: res => {
         console.log('xxxxx', res)
@@ -293,18 +313,20 @@ Page({
     if (pkgCount < 1) {
       pkgCount = 1
     }
-    if (this.data.filePath.length < 1 || this.data.totalCount < 1) {
+    let rrdata = wx.getStorageSync('rrdata')
+    let totalCount = wx.getStorageSync('totalCount')
+
+    if (totalCount < 1) {
       return
     }
     var self = this
-    let totalCount = self.data.totalCount
     console.log('sendBlePkg totalCount', totalCount, 'pkgCount', pkgCount)
     self.setData({
       pkgCount: pkgCount
     })
     let limit = PKG_SIZE * 2
     let begin = (pkgCount - 1) * limit
-    let tmpb = self.data.updata_buff.substr(begin, limit) // new ArrayBuffer(148)
+    let tmpb = rrdata.substr(begin, limit) // new ArrayBuffer(148)
     let length = tmpb ? tmpb.length : 0
     if (length === 0) {
       console.log('发结束的 length === 0')
@@ -318,7 +340,7 @@ Page({
       }
     }
     length = tmpb ? tmpb.length : 0
-    console.log('pkgCount', pkgCount, ', length', length, 'tmpb', tmpb)
+    // console.log('pkgCount', pkgCount, ', length', length, 'tmpb', tmpb)
 
     let cnt = pkgCount
     let cntHex = cnt < 16 ? '0' + cnt.toString(16).toUpperCase() : cnt.toString(16).toUpperCase();
@@ -330,7 +352,10 @@ Page({
     let paramLength = param.length
     console.log('pkgCount', pkgCount, 'paramLength', param.length, 'param', param)
 
-    let psize = 100
+    let isIphone = wx.getStorageSync('IS_IPHONE')
+
+    let psize = isIphone ? 100 : 20 
+    console.log('isIphone:', isIphone, ', psize', psize)
     begin = 0
     for (; begin < paramLength;) {
       let part = param.substr(begin, psize)
@@ -345,18 +370,18 @@ Page({
     let endCmd = endCmdStr + hexString2decimal(endCmdStr)
     console.log('发结束的', endCmd)
     this.writeBLECharacteristicValue(hexStringToArrayBuffer(endCmd))
-
     wx.showToast({
       title: '设备重启中',
       icon: 'loading',
       duration: 4000
     })
-
-    let self = this
+    wx.setStorageSync('rrdata', '')
+    wx.setStorageSync('totalCount', 0)
+    this.setData({
+      pkgCount: 0,
+      isBegin: true
+    })
     setTimeout(function () {
-      self.setData({
-        pkgCount: 0
-      })
       wx.setStorageSync('REST_DEVICE', true)
       wx.navigateBack({
         delta: 1
@@ -369,40 +394,31 @@ Page({
   writeBLECharacteristicValue(buffer) {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
     const serviceId = wx.getStorageSync('WRITE_SERVICEID')
-    console.log('write!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID, ', buffer', buffer)
+    // console.log('write!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID, ', buffer', buffer)
     // 向蓝牙设备发送一个0x00的16进制数据
     // let buffer = new ArrayBuffer(1)
     // $CCYJCX,0*14
     // let param = this.data.inputParam
     // let buffer = stringToBytes(param)
-    console.log("发送数据：", buffer)
-    let self = this
-    let isIphone = wx.getStorageSync('IS_IPHONE')
+    // console.log("发送数据：", buffer)
+
     let dataView = new DataView(buffer)
     // dataView.setUint8(0, 36)
     wx.writeBLECharacteristicValue({
-      deviceId,
-      serviceId,
+      deviceId: deviceId,
+      serviceId: serviceId,
       characteristicId: WRITE_UUID,
       value: buffer,
       success(res) {
-        console.log('writeBLECharacteristicValue success', res)
+        // console.log('writeBLECharacteristicValue success', res)
         // wx.showToast({
         //   title: self.data.pkgCount + '包成功',
         //   icon: 'success',
         //   duration: 1000
         // })
-        if (isIphone === false) {
-          const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
-          wx.readBLECharacteristicValue({
-            deviceId,
-            serviceId: serviceIdNotify,
-            characteristicId: NOTIFY_UUID,
-            success: function (res1) {
-              console.log('readBLECharacteristicValue again', res1)
-            }
-          })
-        }
+      },
+      fail(err) {
+        console.log('writeBLECharacteristicValue err', err)
       }
     })
   },
@@ -436,8 +452,7 @@ Page({
             console.log('onBLECharacteristicValueChange 非法返回值', ab2hex(characteristic.value))
             return
           }
-          console.log("拿到的数据")
-          console.log("dataView", dataView, "dataView.byteLength", dataView.byteLength)
+          console.log("拿到的数据 dataView", dataView, "dataView.byteLength", dataView.byteLength)
           // 长度是6位的都是设备请求包的
           if (6 === dataView.byteLength) {
             // 第二位是第几包
@@ -445,14 +460,6 @@ Page({
             console.log('设备请求包count', count)
             that.sendBlePkg(count)
           }
-          // let valueShow = ''
-          // for (let i = 0; i < dataView.byteLength; i++) {
-          //   console.log("0x" + dataView.getUint8(i).toString(16))
-          //   console.log('char:', String.fromCharCode(parseInt(dataView.getUint8(i).toString(16),16)))
-          //   // dataResult.push(dataView.getUint8(i).toString(16))
-          //   valueShow += String.fromCharCode(parseInt(dataView.getUint8(i).toString(16), 16))
-          // }
-          // console.log('valueShow', valueShow)
         })
       },
       fail: function (err) {

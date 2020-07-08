@@ -184,10 +184,12 @@ Page({
     })
   },
   createBLEConnection(e) {
+    console.log('-- createBLEConnection')
     const ds = e.currentTarget.dataset
     const deviceId = ds.deviceId
     const name = ds.name || deviceId
     wx.setStorageSync('CONNECT_DEVICEID', deviceId)
+    wx.setStorageSync('CONNECT_DEVICENAME', name)
     wx.createBLEConnection({
       deviceId,
       success: (res) => {
@@ -197,6 +199,9 @@ Page({
           deviceId,
         })
         this.getBLEDeviceServices(deviceId)
+      },
+      fail: (err) => {
+        console.log('createBLEConnection fail', err)
       }
     })
     this.stopBluetoothDevicesDiscovery()
@@ -212,6 +217,7 @@ Page({
     })
   },
   getBLEDeviceServices(deviceId) {
+    console.log('-- getBLEDeviceServices')
     wx.getBLEDeviceServices({
       deviceId,
       success: (res) => {
@@ -221,10 +227,14 @@ Page({
             this.getBLEDeviceCharacteristics(deviceId, res.services[i].uuid)
           }
         }
+      },
+      fail: (err) => {
+        console.log('getBLEDeviceServices fail', err)
       }
     })
   },
   getBLEDeviceCharacteristics(deviceId, serviceId) {
+    console.log('-- getBLEDeviceCharacteristics')
     console.log('deviceId:', deviceId, 'serviceId:', serviceId)
     let that = this
     wx.getBLEDeviceCharacteristics({
@@ -237,7 +247,7 @@ Page({
           if (NOTIFY_UUID === item.uuid) {
             console.log('notify find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', NOTIFY_UUID, 'properties', item)
             wx.setStorageSync('NOTIFY_SERVICEID', serviceId)
-            that.initNotify()
+            // that.initNotify()
           }
           if (WRITE_UUID === item.uuid) {
             console.log('write find!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID, 'properties', item)
@@ -275,31 +285,31 @@ Page({
           // }
         }
       },
-      fail(res) {
-        console.error('getBLEDeviceCharacteristics', res)
+      fail: (err) => {
+        console.log('getBLEDeviceCharacteristics fail', err)
       }
     })
     // 操作之前先监听，保证第一时间获取数据
-    wx.onBLECharacteristicValueChange((characteristic) => {
-      const idx = inArray(this.data.chs, 'uuid', characteristic.characteristicId)
-      const data = {}
-      if (idx === -1) {
-        data[`chs[${this.data.chs.length}]`] = {
-          uuid: characteristic.characteristicId,
-          value: ab2hex(characteristic.value)
-        }
-      } else {
-        data[`chs[${idx}]`] = {
-          uuid: characteristic.characteristicId,
-          value: ab2hex(characteristic.value)
-        }
-      }
-      // data[`chs[${this.data.chs.length}]`] = {
-      //   uuid: characteristic.characteristicId,
-      //   value: ab2hex(characteristic.value)
-      // }
-      this.setData(data)
-    })
+    // wx.onBLECharacteristicValueChange((characteristic) => {
+    //   const idx = inArray(this.data.chs, 'uuid', characteristic.characteristicId)
+    //   const data = {}
+    //   if (idx === -1) {
+    //     data[`chs[${this.data.chs.length}]`] = {
+    //       uuid: characteristic.characteristicId,
+    //       value: ab2hex(characteristic.value)
+    //     }
+    //   } else {
+    //     data[`chs[${idx}]`] = {
+    //       uuid: characteristic.characteristicId,
+    //       value: ab2hex(characteristic.value)
+    //     }
+    //   }
+    //   // data[`chs[${this.data.chs.length}]`] = {
+    //   //   uuid: characteristic.characteristicId,
+    //   //   value: ab2hex(characteristic.value)
+    //   // }
+    //   this.setData(data)
+    // })
   },
   writeBLECharacteristicValue() {
     // 向蓝牙设备发送一个0x00的16进制数据

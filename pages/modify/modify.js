@@ -478,17 +478,17 @@ Page({
           icon: 'success',
           duration: 2000
         })
-        if (isIphone === false) {
-          const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
-          wx.readBLECharacteristicValue({
-            deviceId,
-            serviceId: serviceIdNotify,
-            characteristicId: NOTIFY_UUID,
-            success: function (res1) {
-              console.log('readBLECharacteristicValue again', res1)
-            }
-          })
-        }
+        // if (isIphone === false) {
+        //   const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
+        //   wx.readBLECharacteristicValue({
+        //     deviceId,
+        //     serviceId: serviceIdNotify,
+        //     characteristicId: NOTIFY_UUID,
+        //     success: function (res1) {
+        //       console.log('readBLECharacteristicValue again', res1)
+        //     }
+        //   })
+        // }
       }
     })
   },

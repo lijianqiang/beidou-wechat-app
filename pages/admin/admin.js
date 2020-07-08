@@ -183,7 +183,8 @@ Page({
     console.log('requestHeader:', requestHeader, ', responseHeader:', MAP[requestHeader])
     let buffer = stringToBytes(param + "\r\n")
     console.log("发送数据：", buffer)
-
+    
+    let that = this
     let isIphone = wx.getStorageSync('IS_IPHONE')
     let dataView = new DataView(buffer)
     dataView.setUint8(0, 36)
@@ -196,6 +197,7 @@ Page({
         console.log('writeBLECharacteristicValue success', res)
 
         if (isIphone === false) {
+          console.log('android, readBLECharacteristicValue')
           const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
           wx.readBLECharacteristicValue({
             deviceId,
@@ -203,9 +205,37 @@ Page({
             characteristicId: NOTIFY_UUID,
             success: function (res) {
               console.log('readBLECharacteristicValue again')
+            },
+            fail: function(err) {
+              console.log('readBLECharacteristicValue again fail', err)
             }
           })
         }
+      },
+      fail: function(err) {
+        console.log('writeBLECharacteristicValue fail', err)
+        if (10006 == err.errCode) {
+          that.createBLEConnection()
+        }
+      }
+    })
+  },
+  createBLEConnection() {
+    console.log('-- createBLEConnection')
+    const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
+    const name = wx.getStorageSync('CONNECT_DEVICENAME')
+    console.log('createBLEConnection')
+    wx.createBLEConnection({
+      deviceId,
+      success: (res) => {
+        this.setData({
+          connected: true,
+          name,
+          deviceId,
+        })
+      },
+      fail: (err) => {
+        console.log('createBLEConnection fail', err)
       }
     })
   },
@@ -213,12 +243,12 @@ Page({
   initNotify() {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
     const serviceId = wx.getStorageSync('NOTIFY_SERVICEID')
-    console.log('notify serviceId:', serviceId)
+    console.log('initNotify serviceId:', serviceId, ', notifyuuid:', NOTIFY_UUID)
     let that = this
     wx.notifyBLECharacteristicValueChange({
       state: true, // 启用 notify 功能
-      deviceId,
-      serviceId,
+      deviceId: deviceId,
+      serviceId: serviceId,
       characteristicId: NOTIFY_UUID,
       success: function (res) {
         setTimeout(function () {
@@ -289,7 +319,7 @@ Page({
       },
       fail: function (err) {
         wx.showToast({
-          title: '蓝牙通信失败',
+          title: '蓝牙NOTIFY失败',
           icon: 'none',
           duration: 4000
         })
