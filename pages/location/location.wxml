@@ -1,0 +1,47 @@
+<!--pages/location/location.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">位置信息</view>
+		<view class="page__desc">蓝牙连接成功后请等待3秒,若未响应,请再次查询</view>
+	</view>
+
+	<view class="page__bd">
+		<view class="weui-cells__title">查询方式</view>
+		<view class="weui-cells weui-cells_after-title">
+			<radio-group bindchange="radioChange">
+				<label class="weui-cell weui-check__label" wx:for="{{radioItems}}" wx:key="value">
+					<radio class="weui-check" value="{{item.value}}" checked="{{item.checked}}" />
+
+					<view class="weui-cell__bd">{{item.name}}</view>
+					<view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{item.checked}}">
+						<icon class="weui-icon-radio" type="success_no_circle" size="16"></icon>
+					</view>
+				</label>
+			</radio-group>
+		</view>
+
+		<view class="weui-cells weui-cells_after-title" wx:if="{{showNumber}}">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">序号</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" placeholder="请输入序号" value="{{queryNumber}}" bindinput="inputQueryNumber"/>
+				</view>
+			</view>
+		</view>
+
+		<view class="weui-btn-area">
+			<button class="weui-btn" bindtap="queryInfo" loading="{{requestLoading}}">一键查询</button>
+		</view>
+
+    <view class="weui-cells weui-cells_after-title">
+			<scroll-view class="device_list" scroll-y scroll-with-animation>
+				<view wx:for="{{locations}}" wx:key="index" class="device_item" hover-class="device_item_hover" bindtap="showDetail" data-name="{{item.name}}">
+					<view style="font-size: 16px; color: #333;">{{item.name}}</view>
+				</view>
+			</scroll-view>
+		</view>
+	</view>
+
+</view>

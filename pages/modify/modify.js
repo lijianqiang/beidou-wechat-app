@@ -86,18 +86,18 @@ Page({
    * 页面的初始数据
    */
   data: {
-     detail4: {},
-     detail6: {},
-     detail8: {},
-     detail10: {},
-     detail12: {},
-     detail14: {},
-     detail16: {},
-     detail18: {},
-     detail20: {},
-     detail22: {},
-     detail24: {},
-     detail26: {},
+    detail4: {},
+    detail6: {},
+    detail8: {},
+    detail10: {},
+    detail12: {},
+    detail14: {},
+    detail16: {},
+    detail18: {},
+    detail20: {},
+    detail22: {},
+    detail24: {},
+    detail26: {},
 
     devices: [],
     connected: false,
@@ -109,6 +109,8 @@ Page({
     requestLoading: false,
     canSend: false,
     isIphone: true,
+    msgBegin: false,
+    msgText: ''
   },
 
   /**
@@ -166,7 +168,7 @@ Page({
   onShareAppMessage: function () {
 
   },
-  
+
   // 4
   input_4_1: function (e) {
     console.log('4_1', e.detail.value)
@@ -188,14 +190,14 @@ Page({
     let content = 'CCYDPD,0,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query4 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update4: function () {
     let detail = this.data.detail4
     let content = 'CCYDPD,1,' + detail.key1 + ',' + detail.key2
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update4 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 6
@@ -219,14 +221,14 @@ Page({
     let content = 'CCYDDK,0,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query6 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update6: function () {
     let detail = this.data.detail6
     let content = 'CCYDDK,1,' + detail.key1 + ',' + detail.key2
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update6 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 8
@@ -258,14 +260,14 @@ Page({
     let content = 'CCBDSZ,0,0,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query8 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update8: function () {
     let detail = this.data.detail8
     let content = 'CCBDSZ,1,' + detail.key1 + ',' + detail.key2 + ',' + detail.key3
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update8 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 10
@@ -281,14 +283,14 @@ Page({
     let content = 'CCGPSZ,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query10 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update10: function () {
     let detail = this.data.detail10
     let content = 'CCGPSZ,1,' + detail.key1
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update10 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 12
@@ -304,14 +306,14 @@ Page({
     let content = 'CCLYSZ,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query12 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update12: function () {
     let detail = this.data.detail12
     let content = 'CCLYSZ,1,' + detail.key1
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update12 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   // 14
   input_14_1: function (e) {
@@ -326,14 +328,14 @@ Page({
     let content = 'CCXLSZ,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query14 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update14: function () {
     let detail = this.data.detail14
     let content = 'CCXLSZ,1,' + detail.key1
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update14 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 16
@@ -357,14 +359,14 @@ Page({
     let content = 'CCCKSZ,0,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query16 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update16: function () {
     let detail = this.data.detail16
     let content = 'CCCKSZ,1,' + detail.key1 + ',' + detail.key2
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update16 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   // 18
   input_18_1: function (e) {
@@ -379,14 +381,14 @@ Page({
     let content = 'CCRZSZ,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query18 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update12: function () {
     let detail = this.data.detail18
     let content = 'CCRZSZ,1,' + detail.key1
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update18 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   // 20
   input_20_1: function (e) {
@@ -417,14 +419,14 @@ Page({
     let content = 'CCGJSZ,0,0,0,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query20 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
   update20: function () {
     let detail = this.data.detail20
-    let content = 'CCGJSZ,1,' + detail.key1 + ',' +  + detail.key2 + ',' +  + detail.key3
+    let content = 'CCGJSZ,1,' + detail.key1 + ',' + +detail.key2 + ',' + +detail.key3
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('update20 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 22
@@ -432,7 +434,7 @@ Page({
     let content = 'CCDLCX,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query22 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
   },
 
   // 26
@@ -440,7 +442,27 @@ Page({
     let content = 'CCBBCX,0'
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
     console.log('query22 request', request)
-    this.writeBLECharacteristicValue(request)
+    this.sendRequest(request)
+  },
+
+  sendRequest(request) {
+    let requestHeader = getHeader(request)
+    this.setData({
+      'requestHeader': requestHeader,
+      'requestLoading': true,
+      'outputResult': '',
+      'detail': {}
+    })
+    console.log('requestHeader:', requestHeader, ', responseHeader:', MAP[requestHeader], ',request:', request)
+    let isIphone = wx.getStorageSync('IS_IPHONE')
+    let paramLength = request.length
+    let psize = isIphone ? 100 : 20 
+    console.log('isIphone:', isIphone, ', psize', psize)
+    for (let begin = 0; begin < paramLength;) {
+      let part = request.substr(begin, psize)
+      this.writeBLECharacteristicValue(part)
+      begin += psize
+    }
   },
 
   // 蓝牙方法
@@ -452,18 +474,10 @@ Page({
     // let buffer = new ArrayBuffer(1)
     // $CCYJCX,0*14
     // let param = this.data.inputParam
-    let requestHeader = getHeader(param)
-    this.setData({
-      'requestHeader': requestHeader,
-      'requestLoading': true,
-      'outputResult': '',
-      'detail': {}
-    })
-    console.log('requestHeader:', requestHeader, ', responseHeader:', MAP[requestHeader])
+    
     let buffer = stringToBytes(param)
     console.log("发送数据：", buffer)
 
-    let isIphone = wx.getStorageSync('IS_IPHONE')
     let dataView = new DataView(buffer)
     dataView.setUint8(0, 36)
     wx.writeBLECharacteristicValue({
@@ -478,17 +492,6 @@ Page({
           icon: 'success',
           duration: 2000
         })
-        // if (isIphone === false) {
-        //   const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
-        //   wx.readBLECharacteristicValue({
-        //     deviceId,
-        //     serviceId: serviceIdNotify,
-        //     characteristicId: NOTIFY_UUID,
-        //     success: function (res1) {
-        //       console.log('readBLECharacteristicValue again', res1)
-        //     }
-        //   })
-        // }
       }
     })
   },
@@ -523,17 +526,12 @@ Page({
         // 操作之前先监听，保证第一时间获取数据
         wx.onBLECharacteristicValueChange((characteristic) => {
           console.log('onBLECharacteristicValueChange:', characteristic)
-
           let buffer = characteristic.value
           let dataView = new DataView(buffer)
-          let head = dataView.getUint8(0).toString(16)
-          console.log('onBLECharacteristicValueChange head', head)
-          if ('24' !== head) {
-            console.log('onBLECharacteristicValueChange 非法返回值', ab2hex(characteristic.value))
-            return
-          }
-          console.log("拿到的数据")
-          console.log("dataView.byteLength", dataView.byteLength)
+          let first = dataView.getUint8(0).toString(16)
+          let last = dataView.getUint8(dataView.byteLength - 1).toString(16)
+          console.log('拿到的数据 onBLECharacteristicValueChange byteLength=', dataView.byteLength, ', first=', first, ', last=', last)
+
           let valueShow = ''
           for (let i = 0; i < dataView.byteLength; i++) {
             // console.log("0x" + dataView.getUint8(i).toString(16))
@@ -542,34 +540,59 @@ Page({
             valueShow += String.fromCharCode(parseInt(dataView.getUint8(i).toString(16), 16))
           }
           console.log('valueShow', valueShow)
-          let requestHeader = that.data.requestHeader
-          let responseHeader = MAP[requestHeader]
-          let header = getHeader(valueShow)
-          console.log('request:', requestHeader, ', response:', responseHeader, ', result:', header)
-          if (responseHeader === header) {
-            wx.showToast({
-              title: '解析成功',
-              icon: 'success',
-              duration: 1000
-            })
-            let end = valueShow.indexOf('*')
-            let src = valueShow.substring(0, end);
-            let keys = src.split(',')
-            let length = keys.length
-            let detail = {}
-            for (let i=1;i<length;i++) {
-              detail['key' + i] = keys[i]
+          if ('24' === first) {
+            let requestHeader = that.data.requestHeader
+            let responseHeader = MAP[requestHeader]
+            let header = getHeader(valueShow)
+            if (responseHeader === header) {
+              console.log('1.request:', requestHeader, ', response:', responseHeader, ', receive result:', header)
+              that.setData({
+                msgBegin: true,
+                msgText: valueShow
+              })
             }
-            let requestCode = REQUEST_CODE[requestHeader]
-            let detailKey = 'detail' + requestCode
-            console.log('requestCode:', requestCode, ', detailKey:', detailKey, ', detail', detail)
+          }
+
+          if (that.data.msgBegin && '24' !== first) {
+            let msgText = that.data.msgText + valueShow
             that.setData({
-              [detailKey]: detail,
-              'requestHeader': '',
-              'outputResult': valueShow,
-              'requestLoading': false
+              msgText: msgText
             })
-            
+          }
+
+          if ('d' === last || 'a' === last || 'D' === last || 'A' === last) {
+            let msg = that.data.msgText
+            let requestHeader = that.data.requestHeader
+            let responseHeader = MAP[requestHeader]
+            let header = getHeader(msg)
+            console.log('2.request:', requestHeader, ', response:', responseHeader, ', receive result:', header)
+            if (responseHeader === header) {
+              wx.showToast({
+                title: '解析成功',
+                icon: 'success',
+                duration: 1000
+              })
+
+              let end = msg.indexOf('*')
+              let src = msg.substring(0, end);
+              let keys = src.split(',')
+              let length = keys.length
+              let detail = {}
+              for (let i = 1; i < length; i++) {
+                detail['key' + i] = keys[i]
+              }
+              let requestCode = REQUEST_CODE[requestHeader]
+              let detailKey = 'detail' + requestCode
+              console.log('3.requestCode:', requestCode, ', detailKey:', detailKey, ', detail', detail)
+              that.setData({
+                'msgBegin': false,
+                'msgText': '',
+                [detailKey]: detail,
+                'requestHeader': '',
+                'outputResult': valueShow,
+                'requestLoading': false
+              })
+            }
           }
         })
       },

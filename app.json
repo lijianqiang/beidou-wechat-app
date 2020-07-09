@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/location/location",
     "pages/modify/modify",
     "pages/scan/scan",
     "pages/config/config",
@@ -9,6 +10,7 @@
     "pages/logs/logs",
     "pages/file/file",
     "pages/upgrade/upgrade"
+    
   ],
   "window": {
     "backgroundTextStyle": "light",
