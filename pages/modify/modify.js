@@ -383,7 +383,7 @@ Page({
     console.log('query18 request', request)
     this.sendRequest(request)
   },
-  update12: function () {
+  update18: function () {
     let detail = this.data.detail18
     let content = 'CCRZSZ,1,' + detail.key1
     let request = '$' + content + '*' + str2decimal(content) + '\r\n'
@@ -582,6 +582,15 @@ Page({
                 detail['key' + i] = keys[i]
               }
               let requestCode = REQUEST_CODE[requestHeader]
+              if ('20' === requestCode) {
+                console.log('告警的', detail)
+                let tmpDetail = {
+                  'key1': 0,
+                  'key2': detail.key2,
+                  'key3': detail.key4
+                }
+                detail = tmpDetail
+              }
               let detailKey = 'detail' + requestCode
               console.log('3.requestCode:', requestCode, ', detailKey:', detailKey, ', detail', detail)
               that.setData({
