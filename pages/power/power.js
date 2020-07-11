@@ -1,5 +1,4 @@
-// pages/admin/admin.js
-
+// pages/power/power.js
 const NOTIFY_UUID = '0000FFE4-0000-1000-8000-00805F9B34FB'
 const WRITE_UUID = '0000FFE9-0000-1000-8000-00805F9B34FB'
 
@@ -49,39 +48,18 @@ function stringToBytes(str) {
   return array.buffer;
 }
 
-const MAP = {
-  '$CCYJCX': '$HFCSXX',
-  '$CCYDPD': '$HFYDPD',
-  '$CCYDDK': '$HFYDDK',
-  '$CCBDSZ': '$HFBDSC',
-  '$CCGPSZ': '$HFGPSC',
-  '$CCLYSZ': '$HFLYSC',
-  '$CCXLSZ': '$HFXLSC',
-  '$CCCKSZ': '$HFCKSC',
-  '$CCRZSZ': '$HFRZSC',
-  '$CCGJSZ': '$HFGJSC',
-  '$CCBBCX': '$HFBBXX',
-  '$CCREST': '设备复位'
-}
-
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    devices: [],
-    connected: false,
-    canWrite: false,
-    chs: [],
-    result: '',
-    inputParam: '$CCYJCX,0*14',
+    inputParam: '$BDRMO,BSI,2,0*20',
     outputResult: '',
     requestHeader: '',
     requestLoading: false,
     canSend: false,
     isIphone: true,
-    detail: {},
     msgBegin: false,
     msgText: ''
   },
@@ -104,21 +82,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    let isRestDevice = wx.getStorageSync('REST_DEVICE')
-    if (isRestDevice === true) {
-      wx.showToast({
-        title: '设备重启中',
-        icon: 'success',
-        duration: 1000
-      })
-      setTimeout(function () {
-        wx.navigateBack({
-          delta: 1
-        })
-      }, 1000)
-    } else {
-      this.initNotify()
-    }
+    this.initNotify()
   },
 
   /**
@@ -156,38 +120,30 @@ Page({
 
   },
 
-  bindInputParam(e) {
-    this.setData({
-      'inputParam': e.detail.value
-    })
-  },
-
   queryInfo: function () {
     console.log('input', this.data.inputParam)
     this.writeBLECharacteristicValue(this.data.inputParam)
+
+    let that = this
+    setTimeout(function () {
+      that.queryInfo()
+    }, 2000);
   },
 
   writeBLECharacteristicValue(param) {
     const deviceId = wx.getStorageSync('CONNECT_DEVICEID')
     const serviceId = wx.getStorageSync('WRITE_SERVICEID')
     console.log('write!!! deviceId:', deviceId, ', serviceId:', serviceId, ', uuid:', WRITE_UUID)
-    // 向蓝牙设备发送一个0x00的16进制数据
-    // let buffer = new ArrayBuffer(1)
-    // $CCYJCX,0*14
-    // let param = this.data.inputParam
-    let requestHeader = getHeader(param)
+
     this.setData({
-      'requestHeader': requestHeader,
       'requestLoading': true,
       'outputResult': '',
       'detail': {}
     })
-    console.log('requestHeader:', requestHeader, ', responseHeader:', MAP[requestHeader])
     let buffer = stringToBytes(param + "\r\n")
-    console.log("发送数据：", buffer)
+    console.log("发送数据 param:", param, ', buffer:', buffer)
 
     let that = this
-    let isIphone = wx.getStorageSync('IS_IPHONE')
     let dataView = new DataView(buffer)
     dataView.setUint8(0, 36)
     wx.writeBLECharacteristicValue({
@@ -197,22 +153,6 @@ Page({
       value: buffer,
       success(res) {
         console.log('writeBLECharacteristicValue success', res)
-
-        // if (isIphone === false) {
-        //   console.log('android, readBLECharacteristicValue')
-        //   const serviceIdNotify = wx.getStorageSync('NOTIFY_SERVICEID')
-        //   wx.readBLECharacteristicValue({
-        //     deviceId,
-        //     serviceId: serviceIdNotify,
-        //     characteristicId: NOTIFY_UUID,
-        //     success: function (res) {
-        //       console.log('readBLECharacteristicValue again')
-        //     },
-        //     fail: function(err) {
-        //       console.log('readBLECharacteristicValue again fail', err)
-        //     }
-        //   })
-        // }
       },
       fail: function (err) {
         console.log('writeBLECharacteristicValue fail', err)
@@ -254,15 +194,8 @@ Page({
       characteristicId: NOTIFY_UUID,
       success: function (res) {
         setTimeout(function () {
-          that.setData({
-            canSend: true
-          })
-        }, 1200);
-        // wx.showToast({
-        //   title: '蓝牙通信开启成功',
-        //   icon: 'success',
-        //   duration: 2000
-        // })
+          that.queryInfo()
+        }, 2000);
         wx.showToast({
           title: '蓝牙开启中',
           icon: 'loading',
@@ -281,18 +214,14 @@ Page({
 
           let valueShow = ''
           for (let i = 0; i < dataView.byteLength; i++) {
-            // console.log("0x" + dataView.getUint8(i).toString(16))
-            // console.log('char:', String.fromCharCode(parseInt(dataView.getUint8(i).toString(16),16)))
-            // dataResult.push(dataView.getUint8(i).toString(16))
             valueShow += String.fromCharCode(parseInt(dataView.getUint8(i).toString(16), 16))
           }
           console.log('valueShow', valueShow)
+          let responseHeader = '$BDBSI'
           if ('24' === first) {
-            let requestHeader = that.data.requestHeader
-            let responseHeader = MAP[requestHeader]
             let header = getHeader(valueShow)
             if (responseHeader === header) {
-              console.log('1.request:', requestHeader, ', response:', responseHeader, ', receive result:', header)
+              console.log('1.response:', responseHeader, ', receive result:', header)
               that.setData({
                 msgBegin: true,
                 msgText: valueShow
@@ -309,31 +238,36 @@ Page({
 
           if ('d' === last || 'a' === last || 'D' === last || 'A' === last) {
             let msg = that.data.msgText
-            let requestHeader = that.data.requestHeader
-            let responseHeader = MAP[requestHeader]
             let header = getHeader(msg)
-            console.log('2.request:', requestHeader, ', response:', responseHeader, ', receive result:', header)
+            console.log('2.response:', responseHeader, ', receive result:', header)
             if (responseHeader === header) {
-              wx.showToast({
-                title: '解析成功',
-                icon: 'success',
-                duration: 1000
-              })
+              // wx.showToast({
+              //   title: '解析成功',
+              //   icon: 'success',
+              //   duration: 1000
+              // })
               let end = msg.indexOf('*')
               let src = msg.substring(0, end);
               let keys = src.split(',')
               let length = keys.length
-              let detail = {}
-              for (let i = 1; i < length; i++) {
-                detail['key' + i] = keys[i]
+              let value1 = keys[1]
+              let value2 = keys[2]
+              let value3 = ''
+              for (let i = 3; i < length; i++) {
+                if (i > 3) {
+                  value3 += ','
+                }
+                value3 += keys[3]
               }
-              console.log('detail', detail)
+              console.log('value1:', value1, ', value2:', value2, ', value3:', value3)
               that.setData({
                 'msgBegin': false,
                 'msgText': '',
-                'detail': detail,
                 'outputResult': msg,
-                'requestLoading': false
+                'requestLoading': false,
+                'value1': value1,
+                'value2': value2,
+                'value3': value3
               })
             }
           }
@@ -349,60 +283,4 @@ Page({
       },
     })
   },
-
-  toPageModify: function () {
-    wx.navigateTo({
-      url: '../modify/modify'
-    })
-  },
-  toPageTest: function () {
-    wx.navigateTo({
-      url: '../test/test'
-    })
-  },
-  toPageUpgrade: function () {
-    wx.navigateTo({
-      url: '../upgrade/upgrade'
-    })
-  },
-  toPageLocation: function () {
-    wx.navigateTo({
-      url: '../location/location'
-    })
-  },
-  toPagePower: function() {
-    wx.navigateTo({
-      url: '../power/power'
-    })
-  },
-  resetDevice: function () {
-    let that = this
-    wx.showModal({
-      title: '注意',
-      content: '您正在进行设备重启,请确认',
-      confirmText: "确认",
-      cancelText: "取消",
-      success: function (res) {
-        console.log('showModal', res);
-        if (res.confirm) {
-          console.log('用户点击主操作')
-          that.writeBLECharacteristicValue('$CCREST,0*0C')
-          wx.showToast({
-            title: '设备重启中',
-            icon: 'loading',
-            duration: 1500
-          });
-          setTimeout(function () {
-            console.log('navigateBack')
-            wx.setStorageSync('REST_DEVICE', true)
-            wx.navigateBack({
-              delta: 1
-            })
-          }, 1800)
-        } else {
-          console.log('用户点击辅助操作')
-        }
-      }
-    });
-  }
 })

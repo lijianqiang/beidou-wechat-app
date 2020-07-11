@@ -1,0 +1,43 @@
+<!--pages/power/power.wxml-->
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+	<view class="page__hd">
+		<view class="page__title">功率信息</view>
+		<view class="page__desc">蓝牙连接成功后,每2秒自动获取功率</view>
+	</view>
+
+	<view class="page__bd">
+		<view class="weui-cells__title">功率信息</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">响应波束</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" value="{{value1}}" />
+				</view>
+			</view>
+		</view>
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">时差波束</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" value="{{value2}}" />
+				</view>
+			</view>
+		</view>
+
+		<view class="weui-cells weui-cells_after-title">
+			<view class="weui-cell weui-cell_input">
+				<view class="weui-cell__hd">
+					<view class="weui-label">波束功率</view>
+				</view>
+				<view class="weui-cell__bd">
+					<input class="weui-input" value="{{value3}}" />
+				</view>
+			</view>
+		</view>
+	</view>
+
+</view>

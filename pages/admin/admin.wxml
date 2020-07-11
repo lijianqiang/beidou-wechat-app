@@ -142,6 +142,7 @@
       <view class="weui-btn-area">
       <button class="weui-btn" bindtap="toPageModify" type="primary" >修改配置</button>
       <button class="weui-btn" bindtap="toPageLocation" type="default" >位置信息</button>
+      <button class="weui-btn" bindtap="toPagePower" type="default" >功率信息</button>
       <button class="weui-btn" bindtap="toPageUpgrade" type="default" >固件升级</button>
       <button class="weui-btn" bindtap="resetDevice" type="warn" >设备重启</button>
       </view>
