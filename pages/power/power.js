@@ -257,7 +257,7 @@ Page({
                 if (i > 3) {
                   value3 += ','
                 }
-                value3 += keys[3]
+                value3 += keys[i]
               }
               console.log('value1:', value1, ', value2:', value2, ', value3:', value3)
               that.setData({
